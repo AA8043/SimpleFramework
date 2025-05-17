@@ -1,0 +1,6 @@
+tomcat:
+  enable: true
+  port: 8080
+configFile:
+  enable: true
+  path: "./config.yaml"
