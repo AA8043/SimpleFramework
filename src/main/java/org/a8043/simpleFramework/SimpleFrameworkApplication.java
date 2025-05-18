@@ -92,6 +92,14 @@ public class SimpleFrameworkApplication {
             tomcat = new EmbeddedTomcat();
         }
 
+        log.info("创建应用实例: {}", clazz.getName());
+        try {
+            appObject = clazz.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            log.error("创建应用实例失败: {}", clazz.getName(), e);
+        }
+
         log.info("扫描类路径");
         classList = ClassUtil.scanPackage(clazz.getPackageName()).stream().toList();
 
@@ -104,14 +112,6 @@ public class SimpleFrameworkApplication {
         if (tomcat != null) {
             log.info("启动Tomcat");
             tomcat.start();
-        }
-
-        log.info("创建应用实例: {}", clazz.getName());
-        try {
-            appObject = clazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            log.error("创建应用实例失败: {}", clazz.getName(), e);
         }
 
         log.info("启动应用: {}", clazz.getName());
