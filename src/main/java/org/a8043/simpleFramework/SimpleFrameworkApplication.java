@@ -5,9 +5,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.a8043.simpleFramework.annotationHandlers.ConfigFileHandler;
-import org.a8043.simpleFramework.annotationHandlers.RequestMappingHandler;
-import org.a8043.simpleFramework.annotationHandlers.ScheduledHandler;
+import org.a8043.simpleFramework.annotationHandlers.*;
 import org.a8043.simpleFramework.annotations.Application;
 import org.a8043.simpleUtil.util.Config;
 import org.a8043.simpleUtil.util.Timing;
@@ -20,6 +18,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +34,7 @@ public class SimpleFrameworkApplication {
     private Config config;
     private Config configFile;
     private EmbeddedTomcat tomcat;
+    private final Map<String, Object> beanList = new HashMap<>();
 
     public static void run(Class<?> clazz, String[] args) {
         SimpleFrameworkApplication simpleFrameworkApplication = new SimpleFrameworkApplication(clazz, args);
@@ -53,6 +53,8 @@ public class SimpleFrameworkApplication {
         handlerList.add(new RequestMappingHandler());
         handlerList.add(new ConfigFileHandler());
         handlerList.add(new ScheduledHandler());
+        handlerList.add(new BeanHandler());
+        handlerList.add(new EnableAutowiredHandler());
     }
 
     public void run() {
@@ -95,6 +97,9 @@ public class SimpleFrameworkApplication {
 
         log.info("处理注解");
         handleAnnotation();
+
+        log.info("中间处理注解");
+        middleHandleAnnotation();
 
         if (tomcat != null) {
             log.info("启动Tomcat");
@@ -165,6 +170,10 @@ public class SimpleFrameworkApplication {
 
     private void secondHandleAnnotation() {
         handlerList.forEach(AnnotationHandler::secondHandle);
+    }
+
+    private void middleHandleAnnotation() {
+        handlerList.forEach(AnnotationHandler::middleHandle);
     }
 
     public void exit() {

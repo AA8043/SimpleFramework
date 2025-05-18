@@ -7,6 +7,9 @@ public abstract class AnnotationHandler {
 
     public abstract void handle(Class<?> clazz);
 
+    public void middleHandle() {
+    }
+
     public void secondHandle() {
     }
 }
