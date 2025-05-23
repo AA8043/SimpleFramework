@@ -5,6 +5,7 @@ import org.a8043.simpleFramework.AnnotationHandler;
 import org.a8043.simpleFramework.annotations.Bean;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import static org.a8043.simpleFramework.SimpleFrameworkApplication.instance;
 
@@ -16,18 +17,22 @@ public class BeanHandler extends AnnotationHandler {
 
     @Override
     public void handle(Class<?> clazz) {
-        Object object;
-        try {
-            object = clazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            log.error("创建Bean失败", e);
-            return;
-        }
+        Map<String, Object> beanList = instance.getBeanMap();
 
         Bean bean = clazz.getAnnotation(Bean.class);
         String name = bean.value();
 
-        instance.getBeanList().put(name, object);
+        if (!beanList.containsKey(name)) {
+            Object object;
+            try {
+                object = clazz.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
+                log.error("创建Bean失败", e);
+                return;
+            }
+
+            beanList.put(name, object);
+        }
     }
 }

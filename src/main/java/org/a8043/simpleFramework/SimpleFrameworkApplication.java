@@ -34,7 +34,7 @@ public class SimpleFrameworkApplication {
     private Config config;
     private Config configFile;
     private EmbeddedTomcat tomcat;
-    private final Map<String, Object> beanList = new HashMap<>();
+    private final Map<String, Object> beanMap = new HashMap<>();
 
     public static void run(Class<?> clazz, String[] args) {
         SimpleFrameworkApplication simpleFrameworkApplication = new SimpleFrameworkApplication(clazz, args);
@@ -50,11 +50,12 @@ public class SimpleFrameworkApplication {
         this.clazz = clazz;
         this.args = args;
 
-        handlerList.add(new RequestMappingHandler());
-        handlerList.add(new ConfigFileHandler());
-        handlerList.add(new ScheduledHandler());
         handlerList.add(new BeanHandler());
         handlerList.add(new EnableAutowiredHandler());
+        handlerList.add(new ConfigFileHandler());
+        handlerList.add(new RequestMappingHandler());
+        handlerList.add(new ScheduledHandler());
+        handlerList.add(new AspectHandler());
     }
 
     public void run() {
@@ -103,6 +104,9 @@ public class SimpleFrameworkApplication {
         log.info("扫描类路径");
         classList = ClassUtil.scanPackage(clazz.getPackageName()).stream().toList();
 
+        log.info("前注解处理");
+        frontHandleAnnotation();
+
         log.info("处理注解");
         handleAnnotation();
 
@@ -140,32 +144,20 @@ public class SimpleFrameworkApplication {
         log.info("启动成功, 耗时: {}ms", timing.getTime());
     }
 
+    private void frontHandleAnnotation() {
+        classList.forEach(clazz -> handlerList.forEach(handler -> {
+            if (handler.annotation != null && clazz.isAnnotationPresent(handler.annotation)) {
+                handler.frontHandle(clazz);
+            }
+        }));
+    }
+
     private void handleAnnotation() {
         classList.forEach(clazz -> handlerList.forEach(handler -> {
             if (handler.annotation != null && clazz.isAnnotationPresent(handler.annotation)) {
                 handler.handle(clazz);
             }
         }));
-
-//        classList.forEach(clazz -> {
-//            if (clazz.isAnnotationPresent(Application.class)) {
-//                appClassList.add(clazz);
-//            }
-//        });
-//        if (appClassList.isEmpty()) {
-//            log.error("找不到Application");
-//            return;
-//        }
-//        appClassList.forEach(clazz -> {
-//            log.info("启动应用: {}", clazz.getName());
-//            try {
-//                Method method = clazz.getMethod("start", String[].class);
-//                method.invoke(clazz.getDeclaredConstructor().newInstance(), (Object) args);
-//            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-//                     InvocationTargetException e) {
-//                log.error("启动应用失败: {}", clazz.getName(), e);
-//            }
-//        });
     }
 
     private void secondHandleAnnotation() {
