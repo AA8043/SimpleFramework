@@ -38,7 +38,6 @@ public class SimpleFrameworkApplication {
 
     public static void run(Class<?> clazz, String[] args) {
         SimpleFrameworkApplication simpleFrameworkApplication = new SimpleFrameworkApplication(clazz, args);
-        instance = simpleFrameworkApplication;
         simpleFrameworkApplication.run();
     }
 
@@ -47,6 +46,7 @@ public class SimpleFrameworkApplication {
     }
 
     private SimpleFrameworkApplication(Class<?> clazz, String[] args) {
+        instance = this;
         this.clazz = clazz;
         this.args = args;
 
