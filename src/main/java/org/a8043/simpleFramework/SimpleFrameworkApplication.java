@@ -174,6 +174,14 @@ public class SimpleFrameworkApplication {
             instance.tomcat.stop();
         }
 
+        log.info("关闭应用");
+        try {
+            Method start = clazz.getMethod("exit");
+            start.invoke(appObject);
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            log.error("关闭应用失败: {}", clazz.getName(), e);
+        }
+
         System.exit(0);
     }
 }
