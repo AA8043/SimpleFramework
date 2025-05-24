@@ -55,7 +55,6 @@ public class SimpleFrameworkApplication {
         handlerList.add(new ConfigFileHandler());
         handlerList.add(new RequestMappingHandler());
         handlerList.add(new ScheduledHandler());
-        handlerList.add(new AspectHandler());
     }
 
     public void run() {
