@@ -176,8 +176,8 @@ public class SimpleFrameworkApplication {
 
         log.info("关闭应用");
         try {
-            Method start = clazz.getMethod("exit");
-            start.invoke(appObject);
+            Method exit = clazz.getMethod("exit");
+            exit.invoke(appObject);
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             log.error("关闭应用失败: {}", clazz.getName(), e);
         }
