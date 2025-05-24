@@ -28,23 +28,21 @@ public class EnableAutowiredHandler extends AnnotationHandler {
     @Override
     public void middleHandle() {
         Map<String, Object> beanList = instance.getBeanMap();
-        classList.forEach(clazz -> {
-            Arrays.stream(clazz.getDeclaredFields()).toList().forEach(field -> {
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                if (autowired != null) {
-                    Object bean = beanList.get(field.getName());
-                    if (bean != null) {
-                        field.setAccessible(true);
-                        try {
-                            field.set(instance, bean);
-                        } catch (IllegalAccessException e) {
-                            log.error("注入失败: {}", field.getName(), e);
-                        }
-                    } else {
-                        log.error("找不到Bean: {}", field.getName());
+        classList.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).toList().forEach(field -> {
+            Autowired autowired = field.getAnnotation(Autowired.class);
+            if (autowired != null) {
+                Object bean = beanList.get(field.getName());
+                if (bean != null) {
+                    field.setAccessible(true);
+                    try {
+                        field.set(instance, bean);
+                    } catch (IllegalAccessException e) {
+                        log.error("注入失败: {}", field.getName(), e);
                     }
+                } else {
+                    log.error("找不到Bean: {}", field.getName());
                 }
-            });
-        });
+            }
+        }));
     }
 }

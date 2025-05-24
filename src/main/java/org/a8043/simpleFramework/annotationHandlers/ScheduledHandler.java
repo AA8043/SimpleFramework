@@ -4,11 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.a8043.simpleFramework.AnnotationHandler;
 import org.a8043.simpleFramework.annotations.Scheduled;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static org.a8043.simpleFramework.SimpleFrameworkApplication.instance;
 
 @Slf4j
 public class ScheduledHandler extends AnnotationHandler {
@@ -26,14 +27,7 @@ public class ScheduledHandler extends AnnotationHandler {
     @Override
     public void secondHandle() {
         classList.forEach(clazz -> {
-            Object object;
-            try {
-                object = clazz.getDeclaredConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                     NoSuchMethodException e) {
-                log.error("实例化类失败", e);
-                return;
-            }
+            Object object = instance.getBeanByClass(clazz);
             Scheduled scheduled = clazz.getAnnotation(Scheduled.class);
             int time = scheduled.value();
             Timer timer = new Timer();

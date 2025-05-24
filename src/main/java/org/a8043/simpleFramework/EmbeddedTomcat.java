@@ -28,15 +28,7 @@ public class EmbeddedTomcat {
     public void addWebApp(Class<?> clazz) {
         String clazzName = clazz.getName();
         RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
-        Object object;
-        try {
-            object = clazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            log.error("实例化类失败", e);
-            return;
-        }
-
+        Object object = instance.getBeanByClass(clazz);
         Wrapper wrapper = Tomcat.addServlet(mainContext, clazzName, (HttpServlet) object);
         wrapper.setAsyncSupported(requestMapping.asyncSupport());
         mainContext.addServletMapping(requestMapping.value(), clazzName);

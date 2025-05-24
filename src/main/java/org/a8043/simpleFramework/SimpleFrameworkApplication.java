@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.a8043.simpleFramework.annotationHandlers.*;
 import org.a8043.simpleFramework.annotations.Application;
+import org.a8043.simpleFramework.annotations.Bean;
 import org.a8043.simpleUtil.util.Config;
 import org.a8043.simpleUtil.util.Timing;
 import org.yaml.snakeyaml.Yaml;
@@ -45,7 +46,7 @@ public class SimpleFrameworkApplication {
         instance.exit();
     }
 
-    private SimpleFrameworkApplication(Class<?> clazz, String[] args) {
+    public SimpleFrameworkApplication(Class<?> clazz, String[] args) {
         instance = this;
         this.clazz = clazz;
         this.args = args;
@@ -165,6 +166,15 @@ public class SimpleFrameworkApplication {
 
     private void middleHandleAnnotation() {
         handlerList.forEach(AnnotationHandler::middleHandle);
+    }
+
+    public Object getBeanByClass(Class<?> clazz) {
+        Bean beanAnnotation = clazz.getAnnotation(Bean.class);
+        if (beanAnnotation == null) {
+            log.error("没有Bean注解: {}", clazz.getName());
+            return null;
+        }
+        return beanMap.get(beanAnnotation.value());
     }
 
     public void exit() {
