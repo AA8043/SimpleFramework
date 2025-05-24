@@ -26,7 +26,7 @@ public class EnableAutowiredHandler extends AnnotationHandler {
     }
 
     @Override
-    public void middleHandle() {
+    public void secondHandle() {
         Map<String, Object> beanList = instance.getBeanMap();
         classList.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).toList().forEach(field -> {
             Autowired autowired = field.getAnnotation(Autowired.class);

@@ -1,5 +1,6 @@
 package org.a8043.simpleFramework;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.a8043.simpleFramework.annotations.RequestMapping;
 import org.a8043.simpleUtil.util.Config;
@@ -10,13 +11,13 @@ import org.apache.catalina.startup.Tomcat;
 
 import javax.servlet.http.HttpServlet;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.a8043.simpleFramework.SimpleFrameworkApplication.instance;
 
 @Slf4j
 public class EmbeddedTomcat {
     private final Config tomcatConfig = instance.getConfig().getMap("tomcat");
+    @Getter
     private final Tomcat tomcat = new Tomcat();
     private final Context mainContext = tomcat.addContext("/",
         new File("./").getAbsolutePath());

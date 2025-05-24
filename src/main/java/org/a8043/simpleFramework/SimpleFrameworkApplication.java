@@ -104,17 +104,14 @@ public class SimpleFrameworkApplication {
         log.info("扫描类路径");
         classList = ClassUtil.scanPackage(clazz.getPackageName()).stream().toList();
 
-        log.info("前注解处理");
-        frontHandleAnnotation();
-
-        log.info("处理注解");
+        log.info("第一次处理注解");
         handleAnnotation();
 
-        log.info("中间处理注解");
-        middleHandleAnnotation();
+        log.info("第二次处理注解");
+        secondHandleAnnotation();
 
         if (tomcat != null) {
-            log.info("启动Tomcat");
+            log.info("启动Tomcat(端口: {})", config.getMap("tomcat").getInt("port"));
             tomcat.start();
         }
 
@@ -138,18 +135,10 @@ public class SimpleFrameworkApplication {
             }
         }, "NoAutoExitThread").start();
 
-        log.info("二次注解处理");
-        secondHandleAnnotation();
+        log.info("第三次注解处理");
+        thirdHandleAnnotation();
 
         log.info("启动成功, 耗时: {}ms", timing.getTime());
-    }
-
-    private void frontHandleAnnotation() {
-        classList.forEach(clazz -> handlerList.forEach(handler -> {
-            if (handler.annotation != null && clazz.isAnnotationPresent(handler.annotation)) {
-                handler.frontHandle(clazz);
-            }
-        }));
     }
 
     private void handleAnnotation() {
@@ -164,8 +153,8 @@ public class SimpleFrameworkApplication {
         handlerList.forEach(AnnotationHandler::secondHandle);
     }
 
-    private void middleHandleAnnotation() {
-        handlerList.forEach(AnnotationHandler::middleHandle);
+    private void thirdHandleAnnotation() {
+        handlerList.forEach(AnnotationHandler::thirdHandle);
     }
 
     public Object getBeanByClass(Class<?> clazz) {

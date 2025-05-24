@@ -25,7 +25,7 @@ public class ScheduledHandler extends AnnotationHandler {
     }
 
     @Override
-    public void secondHandle() {
+    public void thirdHandle() {
         classList.forEach(clazz -> {
             Object object = instance.getBeanByClass(clazz);
             Scheduled scheduled = clazz.getAnnotation(Scheduled.class);
