@@ -21,7 +21,7 @@ public class ConfigFileHandler extends AnnotationHandler {
             try {
                 Field field = clazz.getDeclaredField(k);
                 field.setAccessible(true);
-                field.set(null, v);
+                field.set(instance.getBeanByClass(clazz), v);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 log.error("配置文件注入失败", e);
             }

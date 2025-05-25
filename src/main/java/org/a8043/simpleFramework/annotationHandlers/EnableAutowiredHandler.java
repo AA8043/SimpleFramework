@@ -35,7 +35,7 @@ public class EnableAutowiredHandler extends AnnotationHandler {
                 if (bean != null) {
                     field.setAccessible(true);
                     try {
-                        field.set(instance, bean);
+                        field.set(instance.getBeanByClass(clazz), bean);
                     } catch (IllegalAccessException e) {
                         log.error("注入失败: {}", field.getName(), e);
                     }
