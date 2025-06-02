@@ -19,6 +19,7 @@ public class EmbeddedTomcat {
     private final Config tomcatConfig = instance.getConfig().getMap("tomcat");
     @Getter
     private final Tomcat tomcat = new Tomcat();
+    @Getter
     private final Context mainContext = tomcat.addContext("/",
         new File("./").getAbsolutePath());
 
