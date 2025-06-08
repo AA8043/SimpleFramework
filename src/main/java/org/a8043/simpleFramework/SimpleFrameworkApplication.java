@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.a8043.simpleFramework.annotationHandlers.*;
-import org.a8043.simpleFramework.annotationHandlers.minecraft.BukkitCommandHandler;
-import org.a8043.simpleFramework.annotationHandlers.minecraft.BukkitListenerHandler;
 import org.a8043.simpleFramework.annotations.Application;
 import org.a8043.simpleFramework.annotations.Bean;
 import org.a8043.simpleUtil.util.Config;
@@ -62,8 +60,6 @@ public class SimpleFrameworkApplication {
         handlerList.add(new ConfigFileHandler());
         handlerList.add(new RequestMappingHandler());
         handlerList.add(new ScheduledHandler());
-        handlerList.add(new BukkitCommandHandler());
-        handlerList.add(new BukkitListenerHandler());
     }
 
     public void run() {
