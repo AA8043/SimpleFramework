@@ -189,7 +189,5 @@ public class SimpleFrameworkApplication {
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             log.error("关闭应用失败: {}", clazz.getName(), e);
         }
-
-        System.exit(0);
     }
 }
