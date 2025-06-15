@@ -3,7 +3,7 @@ package org.a8043.simpleFramework;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.a8043.simpleFramework.annotations.RequestMapping;
-import org.a8043.simpleUtil.util.Config;
+import org.a8043.simpleUtil.Config;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
