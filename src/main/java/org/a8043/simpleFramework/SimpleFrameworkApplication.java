@@ -29,7 +29,6 @@ public class SimpleFrameworkApplication {
     public static SimpleFrameworkApplication instance;
     private final List<AnnotationHandler> handlerList = new ArrayList<>();
     private final Class<?> clazz;
-    private Object appObject;
     private final String[] args;
     private List<Class<?>> classList;
     private Config config;
@@ -93,14 +92,6 @@ public class SimpleFrameworkApplication {
             tomcat = new EmbeddedTomcat();
         }
 
-        log.info("创建应用实例: {}", clazz.getName());
-        try {
-            appObject = clazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            log.error("创建应用实例失败: {}", clazz.getName(), e);
-        }
-
         log.info("扫描类路径");
         classList = ClassUtil.scanPackage(clazz.getPackageName()).stream().toList();
 
@@ -123,7 +114,7 @@ public class SimpleFrameworkApplication {
         }
         try {
             Method start = clazz.getMethod("start", String[].class);
-            start.invoke(appObject, (Object) args);
+            start.invoke(getBeanByClass(clazz), (Object) args);
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             log.error("启动应用失败: {}", clazz.getName(), e);
         }
@@ -177,7 +168,7 @@ public class SimpleFrameworkApplication {
         log.info("关闭应用");
         try {
             Method exit = clazz.getMethod("exit");
-            exit.invoke(appObject);
+            exit.invoke(getBeanByClass(clazz));
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             log.error("关闭应用失败: {}", clazz.getName(), e);
         }
